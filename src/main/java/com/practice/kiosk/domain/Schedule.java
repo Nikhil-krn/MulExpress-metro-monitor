@@ -1,11 +1,9 @@
 package com.practice.kiosk.domain;
 
-import com.practice.kiosk.controllers.ScheduleController;
 import lombok.*;
 import java.time.LocalTime;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter

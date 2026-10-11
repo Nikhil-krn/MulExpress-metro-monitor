@@ -23,11 +23,12 @@ public class ScheduleController {
 
 
     @GetMapping(path = "/schedule")
-    public Schedule retrieveSchedule(){
+    public Schedule retrieveSchedule(@RequestBody final Train train){
 
         return Schedule.builder()
                 .boardPoint("LON")
                 .offPoint("ZYR")
+                .train(train)
                 .date("2026-10-31")
                 .timing(LocalTime.parse("13:00"))
                 .fareLevel("ST")
