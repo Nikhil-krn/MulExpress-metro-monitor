@@ -1,6 +1,7 @@
 package com.practice.kiosk.domain;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 public class Train {
@@ -9,11 +10,9 @@ public class Train {
 
     private int trainId;
 
-    private LocalTime scheduledDepartureTime;
+    private LocalDateTime scheduledDepartureTime;
 
-    private LocalTime scheduledArrivalTime;
-
-    private String date;
+    private LocalDateTime scheduledArrivalTime;
 
     private String origin;
 
@@ -21,14 +20,13 @@ public class Train {
 
     private String inventory;
 
-    public Train(String trainName, int trainId, LocalTime scheduledArrivalTime,
-                 LocalTime scheduledDepartureTime, String date, String origin,
+    public Train(String trainName, int trainId, LocalDateTime scheduledArrivalTime,
+                 LocalDateTime scheduledDepartureTime, String origin,
                  String destination, String inventory){
         this.trainName = trainName;
         this.trainId = trainId;
         this.scheduledArrivalTime = scheduledArrivalTime;
         this.scheduledDepartureTime = scheduledDepartureTime;
-        this.date = date;
         this.origin = origin;
         this.destination = destination;
         this.inventory = "((((Y+R+F+T+P)+W+Q)R))";
@@ -48,16 +46,12 @@ public class Train {
         this.trainId = trainId;
     }
 
-    public void setScheduledArrivalTime(LocalTime scheduledArrivalTime){
+    public void setScheduledArrivalTime(LocalDateTime scheduledArrivalTime){
         this.scheduledArrivalTime = scheduledArrivalTime;
     }
 
-    public void setScheduledDepartureTime(LocalTime scheduledDepartureTime){
+    public void setScheduledDepartureTime(LocalDateTime scheduledDepartureTime){
         this.scheduledDepartureTime = scheduledDepartureTime;
-    }
-
-    public void setDate(String date){
-        this.date = date;
     }
 
     public void setOrigin(String origin){
@@ -81,15 +75,11 @@ public class Train {
         return trainName;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public LocalTime getScheduledArrivalTime() {
+    public LocalDateTime getScheduledArrivalTime() {
         return scheduledArrivalTime;
     }
 
-    public LocalTime getScheduledDepartureTime(){
+    public LocalDateTime getScheduledDepartureTime(){
         return scheduledDepartureTime;
     }
 
@@ -110,64 +100,41 @@ public class Train {
 
         private String trainName;
         private int trainId;
-        private LocalTime scheduledDepartureTime;
-        private LocalTime scheduledArrivalTime;
-        private String date;
+        private LocalDateTime scheduledDepartureTime;
+        private LocalDateTime scheduledArrivalTime;
         private String origin;
         private String destination;
         private String inventory;
 
         public TrainBuilder(){}
 
-        public TrainBuilder trainName(String trainName){
-            this.trainName = trainName;
-            return this;
-        }
+        public TrainBuilder trainName(String trainName)     { this.trainName = trainName; return this; }
 
-        public TrainBuilder trainId(int trainId){
-            this.trainId = trainId;
-            return this;
-        }
+        public TrainBuilder trainId(int trainId)            { this.trainId = trainId; return this; }
 
-        public TrainBuilder scheduledArrivalTime(LocalTime scheduledArrivalTime){
-            this.scheduledArrivalTime = scheduledArrivalTime;
-            return this;
-        }
+        public TrainBuilder scheduledArrivalTime(LocalDateTime scheduledArrivalTime)    { this.scheduledArrivalTime = scheduledArrivalTime; return this; }
 
-        public TrainBuilder scheduledDepartureTime(LocalTime scheduledDepartureTime){
-            this.scheduledDepartureTime = scheduledDepartureTime;
-            return this;
-        }
+        public TrainBuilder scheduledDepartureTime(LocalDateTime scheduledDepartureTime){ this.scheduledDepartureTime = scheduledDepartureTime; return this; }
 
-        public TrainBuilder date(String date){
-            this.date = date;
-            return this;
-        }
+        public TrainBuilder origin(String origin)           { this.origin = origin; return this;}
 
-        public TrainBuilder origin(String origin){
-            this.origin = origin;
-            return this;
-        }
+        public TrainBuilder destination(String destination) { this.destination = destination; return this; }
 
-        public TrainBuilder destination(String destination){
-            this.destination = destination;
-            return this;
-        }
-
-        public TrainBuilder inventory(String inventory){
-            this.inventory = inventory;
-            return this;
-        }
+        public TrainBuilder inventory(String inventory)     {this.inventory = inventory; return this; }
 
         public Train build(){
-            return new Train(trainName, trainId, scheduledArrivalTime, scheduledDepartureTime, date, origin, destination, inventory);
+            return new Train(trainName, trainId, scheduledArrivalTime, scheduledDepartureTime, origin, destination, inventory);
         }
 
         @Override
         public String toString(){
-            return "Train.TrainBuilder(trainName =" + trainName + ", trainId = " + trainId + ", scheduledArrivalTime= "
-                    + scheduledArrivalTime + ", scheduledDepartureTime= " + scheduledDepartureTime + ", date= " + date + ", origin= "
-                    + origin + ", destination= " + destination + ", inventory= " + inventory + ")";
+            return "Train.TrainBuilder{trainName =" + trainName
+                    + ", trainId = " + trainId
+                    + ", scheduledArrivalTime= " + scheduledArrivalTime
+                    + ", scheduledDepartureTime= " + scheduledDepartureTime
+                    + ", origin= " + origin
+                    + ", destination= " + destination
+                    + ", inventory= " + inventory + "}";
         }
 
     }
@@ -175,4 +142,49 @@ public class Train {
     public static TrainBuilder builder(){
         return new TrainBuilder();
     }
+
+    public Train copy() {
+        Train t = new Train();
+        t.setTrainName(trainName);
+        t.setTrainId(trainId);
+        t.setScheduledArrivalTime(scheduledArrivalTime);
+        t.setScheduledDepartureTime(scheduledDepartureTime);
+        t.setOrigin(origin);
+        t.setDestination(destination);
+        t.setInventory(inventory);
+        return t;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(this == o){ return true;}
+        if (!(o instanceof Train other)){
+            return false;
+        }
+        return Objects.equals(trainName, other.trainName)
+                && Objects.equals(trainId, other.trainId)
+                && Objects.equals(scheduledArrivalTime, other.scheduledArrivalTime)
+                && Objects.equals(scheduledDepartureTime, other.scheduledDepartureTime)
+                && Objects.equals(origin, other.origin)
+                && Objects.equals(destination, other.destination)
+                && Objects.equals(inventory, other.inventory);
+
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(trainName, trainName, scheduledArrivalTime, scheduledDepartureTime, origin, destination, inventory);
+    }
+
+    @Override
+    public String toString(){
+        return "Train{trainName =" + trainName
+                + ", trainId = " + trainId
+                + ", scheduledArrivalTime= " + scheduledArrivalTime
+                + ", scheduledDepartureTime= " + scheduledDepartureTime
+                + ", origin= " + origin
+                + ", destination= " + destination
+                + ", inventory= " + inventory + "}";
+    }
+
 }
