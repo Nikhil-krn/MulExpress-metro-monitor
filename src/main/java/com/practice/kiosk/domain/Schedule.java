@@ -1,13 +1,7 @@
 package com.practice.kiosk.domain;
 
-import lombok.*;
 import java.time.LocalTime;
 
-@Data
-@NoArgsConstructor
-@Builder
-@Getter
-@Setter
 public class Schedule {
 
 	private String boardPoint;

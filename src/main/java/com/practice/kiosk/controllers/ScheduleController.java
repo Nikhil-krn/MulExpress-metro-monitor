@@ -18,9 +18,34 @@ public class ScheduleController {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduleController.class);
     private final Map<String, Schedule> realTimeSchedule = new ConcurrentHashMap<>();
-    private final Map<String, Train> irregularTrain = new ConcurrentHashMap<>();
     //private final String err404 = HttpStatus.NOT_FOUND;
 
+
+    @GetMapping(path = "/schedule/sample")
+    public Schedule samplePOCSchedule(){
+
+        return Schedule.builder()
+                .boardPoint("PAD")
+                .offPoint("BED")
+                .date("2026-10-31")
+                .timing(LocalTime.parse("13:00"))
+                .fareLevel("ST")
+                .build();
+    }
+
+    @GetMapping(path = "/train/sample")
+    public Train samplePOCTrain(){
+
+        return Train.builder()
+                .trainName("MLK Express")
+                .trainId(645)
+                .origin("PAD")
+                .destination("BED")
+                .date("2026-10-31")
+                .scheduledDepartureTime(LocalTime.parse("12:50"))
+                .scheduledArrivalTime(LocalTime.parse("13:00"))
+                .build();
+    }
 
     @GetMapping(path = "/schedule")
     public Schedule retrieveSchedule(@RequestBody final Train train){
@@ -47,7 +72,8 @@ public class ScheduleController {
 
         //THERE IS NO CHECK to see if old timing and new timing was the same
         Schedule existingSchedule = realTimeSchedule.get(trainId);
-        Train train = irregularTrain.get(trainId);
+        Train train = existingSchedule.getTrain();
+        train.setScheduledArrivalTime(newTiming);
 
         //check to see if the train in question has an existing schedule
         if(existingSchedule == null){
