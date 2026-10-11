@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,19 +23,19 @@ public class ScheduleController {
     //private final String err404 = HttpStatus.NOT_FOUND;
 
 
-    @GetMapping(path = "/schedule/sample")
+    @GetMapping(path = "/schedules/645")
     public Schedule samplePOCSchedule(){
 
         return Schedule.builder()
                 .boardPoint("PAD")
                 .offPoint("BED")
-                .date("2026-10-31")
+                .date(LocalDate.parse("2026-10-31"))
                 .timing(LocalTime.parse("13:00"))
                 .fareLevel("ST")
                 .build();
     }
 
-    @GetMapping(path = "/train/sample")
+    @GetMapping(path = "/trains/645")
     public Train samplePOCTrain(){
 
         return Train.builder()
@@ -41,47 +43,52 @@ public class ScheduleController {
                 .trainId(645)
                 .origin("PAD")
                 .destination("BED")
-                .date("2026-10-31")
-                .scheduledDepartureTime(LocalTime.parse("12:50"))
-                .scheduledArrivalTime(LocalTime.parse("13:00"))
+                //.scheduledDepartureTime()
+                //.scheduledArrivalTime()
                 .build();
     }
 
-    @GetMapping(path = "/schedule")
+    @GetMapping(path = "/schedules")
     public Schedule retrieveSchedule(@RequestBody final Train train){
 
         return Schedule.builder()
                 .boardPoint("LON")
                 .offPoint("ZYR")
                 .train(train)
-                .date("2026-10-31")
+                .date(LocalDate.parse("2026-10-31"))
                 .timing(LocalTime.parse("13:00"))
                 .fareLevel("ST")
                 .build();
     }
 
-    @PostMapping(path = "/schedule")
+    @PostMapping(path = "/schedules")
     public Schedule createSchedule(@RequestBody final Schedule schedule){
 
         log.info("Got schedule: " + schedule.toString());
         return schedule;
     }
 
-    @PatchMapping(path = "/schedule/{trainId}")
+    @PatchMapping(path = "/schedules/{trainId}")
     public Schedule updateTiming(@PathVariable String trainId, @RequestParam LocalTime newTiming){
 
-        //THERE IS NO CHECK to see if old timing and new timing was the same
         Schedule existingSchedule = realTimeSchedule.get(trainId);
-        Train train = existingSchedule.getTrain();
-        train.setScheduledArrivalTime(newTiming);
 
-        //check to see if the train in question has an existing schedule
         if(existingSchedule == null){
-            log.info("404 NOT_FOUND - No schedules found for: " + trainId);
+            log.info("404 NOT_FOUND - No schedules found for: {} ", trainId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No schedule for " + trainId);
         }
-        Schedule updatedSchedule = new Schedule(existingSchedule.getBoardPoint(), existingSchedule.getOffPoint(), train, existingSchedule.getDate(), existingSchedule.getTiming(), existingSchedule.getFareLevel());
 
+        if(newTiming.equals(existingSchedule.getTiming())){
+            return existingSchedule;
+        }
+
+        Train iropTrain = existingSchedule.getTrain() == null ? null : existingSchedule.getTrain().copy();
+
+        if(iropTrain != null){
+            iropTrain.setScheduledArrivalTime(LocalDateTime.from(newTiming));
+        }
+
+        Schedule updatedSchedule = existingSchedule.withTiming(newTiming);
 
         //check to see if schedule swapping happened as expected,
         //if yes return normally
@@ -89,6 +96,7 @@ public class ScheduleController {
         if(!realTimeSchedule.replace(trainId, existingSchedule, updatedSchedule)){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule was changed concurrently");
         }
+
         log.info("Changed arrival/departure time of train: {} to: {}", trainId, newTiming );
 
         return updatedSchedule;
