@@ -22,6 +22,12 @@ public class ScheduleController {
     private final Map<String, Schedule> realTimeSchedule = new ConcurrentHashMap<>();
     //private final String err404 = HttpStatus.NOT_FOUND;
 
+    @PostMapping(path = "/schedules")
+    public Schedule createSchedule(@RequestBody final Schedule schedule){
+
+        log.info("Got schedule: {} ", schedule.toString());
+        return schedule;
+    }
 
     @GetMapping(path = "/schedules/645")
     public Schedule samplePOCSchedule(){
@@ -32,19 +38,6 @@ public class ScheduleController {
                 .date(LocalDate.parse("2026-10-31"))
                 .timing(LocalTime.parse("13:00"))
                 .fareLevel("ST")
-                .build();
-    }
-
-    @GetMapping(path = "/trains/645")
-    public Train samplePOCTrain(){
-
-        return Train.builder()
-                .trainName("MLK Express")
-                .trainId(645)
-                .origin("PAD")
-                .destination("BED")
-                //.scheduledDepartureTime()
-                //.scheduledArrivalTime()
                 .build();
     }
 
@@ -59,13 +52,6 @@ public class ScheduleController {
                 .timing(LocalTime.parse("13:00"))
                 .fareLevel("ST")
                 .build();
-    }
-
-    @PostMapping(path = "/schedules")
-    public Schedule createSchedule(@RequestBody final Schedule schedule){
-
-        log.info("Got schedule: " + schedule.toString());
-        return schedule;
     }
 
     @PatchMapping(path = "/schedules/{trainId}")

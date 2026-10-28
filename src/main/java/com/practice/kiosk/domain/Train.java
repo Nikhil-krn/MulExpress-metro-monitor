@@ -1,14 +1,20 @@
 package com.practice.kiosk.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-
+@Entity
+@Table(name = "mxpress_trains")
 public class Train {
 
     private String trainName;
 
-    private int trainId;
+    @Id
+    private Integer trainId;
 
     private LocalDateTime scheduledDepartureTime;
 

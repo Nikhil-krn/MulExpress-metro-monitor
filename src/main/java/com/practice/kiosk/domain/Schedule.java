@@ -1,13 +1,23 @@
 package com.practice.kiosk.domain;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
+@Entity
+@Table(name = "mxpress_schedules")
 public class Schedule {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_id_seq")
+	private Integer scheduleId;
 	private String boardPoint;
 	private String offPoint;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "trainId")
 	private Train train;
 	private LocalDate date;
 	private LocalTime timing;
@@ -26,18 +36,20 @@ public class Schedule {
 	}
 
 	// Setters
+	public void setScheduleId(Integer scheduleId){ this.scheduleId = scheduleId; }
 	public void setBoardPoint(String boardPoint) { this.boardPoint = boardPoint; }
 	public void setOffPoint(String offPoint)     { this.offPoint = offPoint; }
 	public void setTrain(Train train)            { this.train = train; }
-	public void setDate(LocalDate date)             { this.date = date; }
+	public void setDate(LocalDate date)        	 { this.date = date; }
 	public void setTiming(LocalTime timing)      { this.timing = timing; }
 	public void setFareLevel(String fareLevel)   { this.fareLevel = fareLevel; }
 
 	// Getters
+	public Integer getScheduleId(){	return scheduleId;}
 	public String getBoardPoint() { return boardPoint; }
 	public String getOffPoint()   { return offPoint; }
 	public Train getTrain()       { return train; }
-	public LocalDate getDate()       { return LocalDate.from(date); }
+	public LocalDate getDate()    { return LocalDate.from(date); }
 	public LocalTime getTiming()  { return timing; }
 	public String getFareLevel()  { return fareLevel; }
 
@@ -64,7 +76,7 @@ public class Schedule {
 		public Builder boardPoint(String boardPoint) { this.boardPoint = boardPoint; return this; }
 		public Builder offPoint(String offPoint)     { this.offPoint = offPoint; return this; }
 		public Builder train(Train train)            { this.train = train; return this; }
-		public Builder date(LocalDate date)             { this.date = date; return this; }
+		public Builder date(LocalDate date)          	{ this.date = date; return this; }
 		public Builder timing(LocalTime timing)      { this.timing = timing; return this; }
 		public Builder fareLevel(String fareLevel)   { this.fareLevel = fareLevel; return this; }
 
