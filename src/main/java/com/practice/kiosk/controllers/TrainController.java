@@ -2,26 +2,41 @@ package com.practice.kiosk.controllers;
 
 
 import com.practice.kiosk.domain.Train;
+import com.practice.kiosk.dto.TrainDto;
+import com.practice.kiosk.repositories.TrainRepository;
+import com.practice.kiosk.services.TrainServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
 @RestController
+@RequestMapping("/trains")
 public class TrainController {
 
     private static final Logger log = LoggerFactory.getLogger(TrainController.class);
 
+    private final TrainServices trainServices;
 
-    @PostMapping(path = "/trains")
-    public Train createTrain(@RequestBody Train train){
+    public TrainController(TrainServices trainServices){
+        this.trainServices = trainServices;
+    }
 
-        log.info("Got Train: {}", train.toString());
-        return new Train();
+    @PostMapping
+    public ResponseEntity<TrainDto> createTrain(@RequestBody TrainDto trainDto){
+
+        log.info("Got Train: {}", trainDto.toString());
+
+        TrainDto savedTrainDto = trainServices.createTrain(trainDto);
+        return ResponseEntity.ok(savedTrainDto);
+    }
+
+    @GetMapping("/{trainId}")
+    public ResponseEntity<TrainDto> getTrainById(@PathVariable("trainId") Integer trainId){
+        TrainDto trainDto = trainServices.getTrainById(trainId);
+        return ResponseEntity.ok(trainDto);
     }
 
     @GetMapping(path = "/trains/645")
