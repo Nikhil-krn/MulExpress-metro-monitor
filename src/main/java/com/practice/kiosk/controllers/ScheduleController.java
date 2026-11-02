@@ -3,9 +3,12 @@ package com.practice.kiosk.controllers;
 
 import com.practice.kiosk.domain.Schedule;
 import com.practice.kiosk.domain.Train;
+import com.practice.kiosk.dto.ScheduleDto;
+import com.practice.kiosk.services.ScheduleServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,47 +19,38 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
+@RequestMapping(path = "/schedules")
 public class ScheduleController {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduleController.class);
-    private final Map<String, Schedule> realTimeSchedule = new ConcurrentHashMap<>();
+
+    private final ScheduleServices scheduleServices;
     //private final String err404 = HttpStatus.NOT_FOUND;
 
-    @PostMapping(path = "/schedules")
-    public Schedule createSchedule(@RequestBody final Schedule schedule){
-
-        log.info("Got schedule: {} ", schedule.toString());
-        return schedule;
+    public ScheduleController(ScheduleServices scheduleServices){
+        this.scheduleServices = scheduleServices;
     }
 
-    @GetMapping(path = "/schedules/645")
-    public Schedule samplePOCSchedule(){
+    @PostMapping
+    public ResponseEntity<ScheduleDto> createSchedule(@RequestBody final ScheduleDto scheduleDto){
+        log.info("Got schedule: {} ", scheduleDto.toString());
 
-        return Schedule.builder()
-                .boardPoint("PAD")
-                .offPoint("BED")
-                .date(LocalDate.parse("2026-10-31"))
-                .timing(LocalTime.parse("13:00"))
-                .fareLevel("ST")
-                .build();
+        ScheduleDto newSchedule = scheduleServices.createSchedule(scheduleDto);
+        return ResponseEntity.ok(newSchedule);
     }
 
-    @GetMapping(path = "/schedules")
-    public Schedule retrieveSchedule(@RequestBody final Train train){
+    @GetMapping(path = "/{scheduleId}")
+    public ResponseEntity<ScheduleDto> retrieveSchedule(@PathVariable("scheduleId") final Integer scheduleId){
 
-        return Schedule.builder()
-                .boardPoint("LON")
-                .offPoint("ZYR")
-                .train(train)
-                .date(LocalDate.parse("2026-10-31"))
-                .timing(LocalTime.parse("13:00"))
-                .fareLevel("ST")
-                .build();
+        ScheduleDto schedule = scheduleServices.retrieveSchedule(scheduleId);
+        return ResponseEntity.ok(schedule);
     }
 
-    @PatchMapping(path = "/schedules/{trainId}")
-    public Schedule updateTiming(@PathVariable String trainId, @RequestParam LocalTime newTiming){
+    @PatchMapping(path = "/{trainId}")
+    public Schedule updateTiming(@PathVariable("trainId") String trainId, @RequestParam LocalTime newTiming){
 
+
+        final Map<String, Schedule> realTimeSchedule = new ConcurrentHashMap<>();
         Schedule existingSchedule = realTimeSchedule.get(trainId);
 
         if(existingSchedule == null){
@@ -88,5 +82,16 @@ public class ScheduleController {
         return updatedSchedule;
     }
 
+    @GetMapping(path = "/schedules/645")
+    public Schedule samplePOCSchedule(){
+
+        return Schedule.builder()
+                .boardPoint("PAD")
+                .offPoint("BED")
+                .date(LocalDate.parse("2026-10-31"))
+                .timing(LocalTime.parse("13:00"))
+                .fareLevel("ST")
+                .build();
+    }
 
 }

@@ -1,4 +1,8 @@
 package com.practice.kiosk.repositories;
 
-public interface ScheduleRepository {
+import com.practice.kiosk.domain.Schedule;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
+
 }

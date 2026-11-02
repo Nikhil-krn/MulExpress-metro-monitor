@@ -25,18 +25,18 @@ public class TrainController {
     }
 
     @PostMapping
-    public ResponseEntity<TrainDto> createTrain(@RequestBody TrainDto trainDto){
+    public ResponseEntity<TrainDto> createTrain(@RequestBody final TrainDto trainDto){
 
         log.info("Got Train: {}", trainDto.toString());
 
-        TrainDto savedTrainDto = trainServices.createTrain(trainDto);
-        return ResponseEntity.ok(savedTrainDto);
+        TrainDto newTrain = trainServices.createTrain(trainDto);
+        return ResponseEntity.ok(newTrain);
     }
 
     @GetMapping("/{trainId}")
-    public ResponseEntity<TrainDto> getTrainById(@PathVariable("trainId") Integer trainId){
-        TrainDto trainDto = trainServices.getTrainById(trainId);
-        return ResponseEntity.ok(trainDto);
+    public ResponseEntity<TrainDto> getTrainById(@PathVariable("trainId") final Integer trainId){
+        TrainDto train = trainServices.getTrainById(trainId);
+        return ResponseEntity.ok(train);
     }
 
     @GetMapping(path = "/trains/645")

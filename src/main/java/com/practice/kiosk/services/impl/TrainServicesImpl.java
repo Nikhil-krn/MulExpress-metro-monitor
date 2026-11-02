@@ -5,8 +5,10 @@ import com.practice.kiosk.dto.TrainDto;
 import com.practice.kiosk.mapper.TrainMapper;
 import com.practice.kiosk.repositories.TrainRepository;
 import com.practice.kiosk.services.TrainServices;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import com.practice.kiosk.exceptions.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TrainServicesImpl implements TrainServices {
 
     private final TrainRepository trainRepository;
