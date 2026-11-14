@@ -1,5 +1,6 @@
 package com.practice.kiosk;
 
+import com.practice.kiosk.domain.Schedule;
 import com.practice.kiosk.domain.Train;
 
 import java.time.LocalDateTime;
@@ -31,5 +32,9 @@ public final class TestDataUtil {
                 .scheduledDepartureTime(LocalDateTime.parse("2026-10-15T09:20"))
                 .inventory("((((Y*R*F*T*P)*W*Q)R))")
                 .build();
+    }
+
+    public static Schedule createTestSchedule(){
+        return
     }
 }

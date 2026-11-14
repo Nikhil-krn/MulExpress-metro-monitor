@@ -4,6 +4,7 @@ package com.practice.kiosk.controllers;
 import com.practice.kiosk.domain.Schedule;
 import com.practice.kiosk.domain.Train;
 import com.practice.kiosk.dto.ScheduleDto;
+import com.practice.kiosk.repositories.ScheduleRepository;
 import com.practice.kiosk.services.ScheduleServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +26,11 @@ public class ScheduleController {
     private static final Logger log = LoggerFactory.getLogger(ScheduleController.class);
 
     private final ScheduleServices scheduleServices;
-    //private final String err404 = HttpStatus.NOT_FOUND;
+    private final ScheduleRepository scheduleRepository;
 
-    public ScheduleController(ScheduleServices scheduleServices){
+    public ScheduleController(ScheduleServices scheduleServices, ScheduleRepository scheduleRepository){
         this.scheduleServices = scheduleServices;
+        this.scheduleRepository = scheduleRepository;
     }
 
     @PostMapping
@@ -46,43 +48,43 @@ public class ScheduleController {
         return ResponseEntity.ok(schedule);
     }
 
-    @PatchMapping(path = "/{trainId}")
+    /*@PatchMapping(path = "/{trainId}")
     public Schedule updateTiming(@PathVariable("trainId") String trainId, @RequestParam LocalTime newTiming){
 
 
-        final Map<String, Schedule> realTimeSchedule = new ConcurrentHashMap<>();
-        Schedule existingSchedule = realTimeSchedule.get(trainId);
+        Iterable<Schedule> existingSchedules = scheduleRepository.fetchByTrainId(trainId);
 
-        if(existingSchedule == null){
+        if(existingSchedules == null){
             log.info("404 NOT_FOUND - No schedules found for: {} ", trainId);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No schedule for " + trainId);
         }
 
-        if(newTiming.equals(existingSchedule.getTiming())){
-            return existingSchedule;
+        if(newTiming.equals(existingSchedules.get(0).getTiming())){
+            log.info("No change in timing could be found. {}", newTiming);
+            return existingSchedules;
         }
 
-        Train iropTrain = existingSchedule.getTrain() == null ? null : existingSchedule.getTrain().copy();
+        Train iropTrain = existingSchedules.getTrain() == null ? null : existingSchedules.getTrain().copy();
 
         if(iropTrain != null){
             iropTrain.setScheduledArrivalTime(LocalDateTime.from(newTiming));
         }
 
-        Schedule updatedSchedule = existingSchedule.withTiming(newTiming);
+        Schedule updatedSchedule = existingSchedules.withTiming(newTiming);
 
         //check to see if schedule swapping happened as expected,
         //if yes return normally
         //if no then throqm some exception since probably some other request disrupted concurrency
-        if(!realTimeSchedule.replace(trainId, existingSchedule, updatedSchedule)){
+        if(!realTimeSchedule.replace(trainId, existingSchedules, updatedSchedule)){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule was changed concurrently");
         }
 
         log.info("Changed arrival/departure time of train: {} to: {}", trainId, newTiming );
 
         return updatedSchedule;
-    }
+    }*/
 
-    @GetMapping(path = "/schedules/645")
+    @GetMapping(path = "/645")
     public Schedule samplePOCSchedule(){
 
         return Schedule.builder()
