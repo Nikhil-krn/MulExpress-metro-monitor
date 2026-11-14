@@ -1,9 +1,7 @@
 package com.practice.kiosk.domain;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -16,32 +14,31 @@ public class Schedule {
 	private String boardPoint;
 	private String offPoint;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "trainId")
 	private Train train;
-	private LocalDate date;
-	private LocalTime timing;
+	private LocalDateTime scheduledDepartureTime;
+	private LocalDateTime scheduledArrivalTime;
 	private String fareLevel;
 
 	public Schedule() {}
 
 	public Schedule(String boardPoint, String offPoint, Train train,
-					LocalDate date, LocalTime timing, String fareLevel) {
+					LocalDateTime scheduledDepartureTime, LocalDateTime scheduledArrivalTime, String fareLevel) {
 		this.boardPoint = boardPoint;
 		this.offPoint = offPoint;
 		this.train = train;
-		this.date = date;
-		this.timing = timing;
+		this.scheduledDepartureTime = scheduledDepartureTime;
+		this.scheduledArrivalTime = scheduledArrivalTime;
 		this.fareLevel = fareLevel;
 	}
 
-	// Setters
-	public void setScheduleId(Integer scheduleId){ this.scheduleId = scheduleId; }
+	//Setters
 	public void setBoardPoint(String boardPoint) { this.boardPoint = boardPoint; }
 	public void setOffPoint(String offPoint)     { this.offPoint = offPoint; }
 	public void setTrain(Train train)            { this.train = train; }
-	public void setDate(LocalDate date)        	 { this.date = date; }
-	public void setTiming(LocalTime timing)      { this.timing = timing; }
+	public void setScheduledDepartureTime(LocalDateTime scheduledDepartureTime)	{ this.scheduledDepartureTime = scheduledDepartureTime; }
+	public void setScheduledArrivalTime(LocalDateTime scheduledArrivalTime)		{ this.scheduledArrivalTime = scheduledArrivalTime; }
 	public void setFareLevel(String fareLevel)   { this.fareLevel = fareLevel; }
 
 	// Getters
@@ -49,13 +46,13 @@ public class Schedule {
 	public String getBoardPoint() { return boardPoint; }
 	public String getOffPoint()   { return offPoint; }
 	public Train getTrain()       { return train; }
-	public LocalDate getDate()    { return LocalDate.from(date); }
-	public LocalTime getTiming()  { return timing; }
+	public LocalDateTime getScheduledDepartureTime()	{ return scheduledDepartureTime; }
+	public LocalDateTime getScheduledArrivalTime()  		{ return scheduledArrivalTime; }
 	public String getFareLevel()  { return fareLevel; }
 
 	//withers
-	public Schedule withTiming(LocalTime newTiming) {
-		return new Schedule(boardPoint, offPoint, train, date, newTiming, fareLevel);
+	public Schedule withTiming(LocalDateTime estimatedDepartureTime, LocalDateTime estimatedArrivalTime) {
+		return new Schedule(boardPoint, offPoint, train, estimatedDepartureTime, estimatedArrivalTime, fareLevel);
 	}
 
 	// Builder
@@ -67,8 +64,8 @@ public class Schedule {
 		private String boardPoint;
 		private String offPoint;
 		private Train train;
-		private LocalDate date;
-		private LocalTime timing;
+		private LocalDateTime scheduledDepartureTime;
+		private LocalDateTime scheduledArrivalTime;
 		private String fareLevel;
 
 		private Builder() {}
@@ -76,12 +73,12 @@ public class Schedule {
 		public Builder boardPoint(String boardPoint) { this.boardPoint = boardPoint; return this; }
 		public Builder offPoint(String offPoint)     { this.offPoint = offPoint; return this; }
 		public Builder train(Train train)            { this.train = train; return this; }
-		public Builder date(LocalDate date)          	{ this.date = date; return this; }
-		public Builder timing(LocalTime timing)      { this.timing = timing; return this; }
+		public Builder scheduledDepartureTime(LocalDateTime scheduledDepartureTime)	{ this.scheduledDepartureTime = scheduledDepartureTime; return this; }
+		public Builder scheduledArrivalTime(LocalDateTime scheduledArrivalTime)		{ this.scheduledArrivalTime = scheduledArrivalTime; return this; }
 		public Builder fareLevel(String fareLevel)   { this.fareLevel = fareLevel; return this; }
 
 		public Schedule build() {
-			return new Schedule(boardPoint, offPoint, train, date, timing, fareLevel);
+			return new Schedule(boardPoint, offPoint, train, scheduledDepartureTime, scheduledArrivalTime, fareLevel);
 		}
 	}
 
@@ -93,14 +90,14 @@ public class Schedule {
 		return Objects.equals(boardPoint, other.boardPoint)
 				&& Objects.equals(offPoint, other.offPoint)
 				&& Objects.equals(train, other.train)
-				&& Objects.equals(date, other.date)
-				&& Objects.equals(timing, other.timing)
+				&& Objects.equals(scheduledDepartureTime, other.scheduledDepartureTime)
+				&& Objects.equals(scheduledArrivalTime, other.scheduledArrivalTime)
 				&& Objects.equals(fareLevel, other.fareLevel);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(boardPoint, offPoint, train, date, timing, fareLevel);
+		return Objects.hash(boardPoint, offPoint, train, scheduledDepartureTime, scheduledArrivalTime, fareLevel);
 	}
 
 	@Override
@@ -108,8 +105,8 @@ public class Schedule {
 		return "Schedule{boardPoint=" + boardPoint
 				+ ", offPoint=" + offPoint
 				+ ", train=" + train
-				+ ", date=" + date
-				+ ", timing=" + timing
+				+ ", scheduledDepartureTime =" + scheduledDepartureTime
+				+ ", scheduledArrivalTime =" + scheduledArrivalTime
 				+ ", fareLevel=" + fareLevel + "}";
 	}
 

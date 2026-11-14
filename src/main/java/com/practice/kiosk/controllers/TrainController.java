@@ -3,7 +3,6 @@ package com.practice.kiosk.controllers;
 
 import com.practice.kiosk.domain.Train;
 import com.practice.kiosk.dto.TrainDto;
-import com.practice.kiosk.repositories.TrainRepository;
 import com.practice.kiosk.services.TrainServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +46,6 @@ public class TrainController {
                 .trainId(645)
                 .origin("PAD")
                 .destination("BED")
-                .scheduledDepartureTime(LocalDateTime.parse("2026-10-31T12:50"))
-                .scheduledArrivalTime(LocalDateTime.parse("2026-10-31T13:00"))
                 .build();
     }
 

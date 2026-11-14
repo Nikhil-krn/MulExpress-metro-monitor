@@ -84,16 +84,4 @@ public class ScheduleController {
         return updatedSchedule;
     }*/
 
-    @GetMapping(path = "/645")
-    public Schedule samplePOCSchedule(){
-
-        return Schedule.builder()
-                .boardPoint("PAD")
-                .offPoint("BED")
-                .date(LocalDate.parse("2026-10-31"))
-                .timing(LocalTime.parse("13:00"))
-                .fareLevel("ST")
-                .build();
-    }
-
 }

@@ -1,15 +1,14 @@
 package com.practice.kiosk.dto;
 
 import com.practice.kiosk.domain.Train;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public record ScheduleDto(
         String boardPoint,
         String offPoint,
         Train train,
-        LocalDate date,
-        LocalTime timing,
+        LocalDateTime scheduledDepartureTime,
+        LocalDateTime scheduledArrivalTime,
         String fareLevel
 ) {
 }

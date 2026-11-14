@@ -34,7 +34,7 @@ public final class TestDataUtil {
                 .build();
     }
 
-    public static Schedule createTestSchedule(){
-        return
+    public static Schedule createTestSchedule122(){
+        return Schedule.builder().build();
     }
 }
