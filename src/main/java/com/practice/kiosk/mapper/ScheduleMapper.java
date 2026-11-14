@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 public class ScheduleMapper {
 
     public ScheduleDto toDto(Schedule schedule){
-        return new ScheduleDto( schedule.getBoardPoint(),
+        return new ScheduleDto( schedule.getScheduleId(),
+                                schedule.getBoardPoint(),
                                 schedule.getOffPoint(),
                                 schedule.getTrain(),
                                 schedule.getScheduledDepartureTime(),

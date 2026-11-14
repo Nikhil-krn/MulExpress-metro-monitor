@@ -4,6 +4,7 @@ import com.practice.kiosk.domain.Train;
 import java.time.LocalDateTime;
 
 public record ScheduleDto(
+        Integer scheduleId,
         String boardPoint,
         String offPoint,
         Train train,
