@@ -4,11 +4,12 @@ import com.practice.kiosk.domain.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
-    @Query(value = "SELECT ms FROM mxpress_schedules ms WHERE ms.trainId = :trainId", nativeQuery = true)
-    Iterable<Schedule> fetchByTrainId(String trainId);
+    @Query( value = "SELECT * FROM mxpress_schedules WHERE train_Id = :trainId and happening = TRUE",
+            nativeQuery = true )
+    Schedule fetchByTrainId(Integer trainId);
 
-    @Query(value = "INSERT into mxpress_schedules ms WHERE ms.", nativeQuery = true)
-    Schedule saveSchedule(Schedule schedule);
 }

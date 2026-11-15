@@ -20,6 +20,7 @@ public class Schedule {
 	private LocalDateTime scheduledDepartureTime;
 	private LocalDateTime scheduledArrivalTime;
 	private String fareLevel;
+	private boolean happening = false;
 
 	public Schedule() {}
 
@@ -40,6 +41,7 @@ public class Schedule {
 	public void setScheduledDepartureTime(LocalDateTime scheduledDepartureTime)	{ this.scheduledDepartureTime = scheduledDepartureTime; }
 	public void setScheduledArrivalTime(LocalDateTime scheduledArrivalTime)		{ this.scheduledArrivalTime = scheduledArrivalTime; }
 	public void setFareLevel(String fareLevel)   { this.fareLevel = fareLevel; }
+	public void setHappening(boolean happening)	 { this.happening = happening; }
 
 	// Getters
 	public Integer getScheduleId(){	return scheduleId;}
@@ -49,10 +51,13 @@ public class Schedule {
 	public LocalDateTime getScheduledDepartureTime()	{ return scheduledDepartureTime; }
 	public LocalDateTime getScheduledArrivalTime()  		{ return scheduledArrivalTime; }
 	public String getFareLevel()  { return fareLevel; }
+	public boolean getHappening() { return this.happening;}
 
 	//withers
-	public Schedule withTiming(LocalDateTime estimatedDepartureTime, LocalDateTime estimatedArrivalTime) {
-		return new Schedule(boardPoint, offPoint, train, estimatedDepartureTime, estimatedArrivalTime, fareLevel);
+	public Schedule withDepartureTiming(LocalDateTime estimatedDepartureTime) {
+		Schedule updatedSchedule = new Schedule(boardPoint, offPoint, train, estimatedDepartureTime, scheduledArrivalTime, fareLevel);
+		updatedSchedule.setHappening(true);
+		return updatedSchedule;
 	}
 
 	// Builder

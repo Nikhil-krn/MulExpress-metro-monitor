@@ -26,11 +26,9 @@ public class ScheduleController {
     private static final Logger log = LoggerFactory.getLogger(ScheduleController.class);
 
     private final ScheduleServices scheduleServices;
-    private final ScheduleRepository scheduleRepository;
 
-    public ScheduleController(ScheduleServices scheduleServices, ScheduleRepository scheduleRepository){
+    public ScheduleController(ScheduleServices scheduleServices){
         this.scheduleServices = scheduleServices;
-        this.scheduleRepository = scheduleRepository;
     }
 
     @PostMapping
@@ -48,40 +46,12 @@ public class ScheduleController {
         return ResponseEntity.ok(schedule);
     }
 
-    /*@PatchMapping(path = "/{trainId}")
-    public Schedule updateTiming(@PathVariable("trainId") String trainId, @RequestParam LocalTime newTiming){
+    @PatchMapping(path = "/{trainId}")
+    public ResponseEntity<ScheduleDto> updateTiming( @PathVariable final Integer trainId,
+                                                     @RequestParam("newTiming") final LocalDateTime estimatedTime){
 
-
-        Iterable<Schedule> existingSchedules = scheduleRepository.fetchByTrainId(trainId);
-
-        if(existingSchedules == null){
-            log.info("404 NOT_FOUND - No schedules found for: {} ", trainId);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No schedule for " + trainId);
-        }
-
-        if(newTiming.equals(existingSchedules.get(0).getTiming())){
-            log.info("No change in timing could be found. {}", newTiming);
-            return existingSchedules;
-        }
-
-        Train iropTrain = existingSchedules.getTrain() == null ? null : existingSchedules.getTrain().copy();
-
-        if(iropTrain != null){
-            iropTrain.setScheduledArrivalTime(LocalDateTime.from(newTiming));
-        }
-
-        Schedule updatedSchedule = existingSchedules.withTiming(newTiming);
-
-        //check to see if schedule swapping happened as expected,
-        //if yes return normally
-        //if no then throqm some exception since probably some other request disrupted concurrency
-        if(!realTimeSchedule.replace(trainId, existingSchedules, updatedSchedule)){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Schedule was changed concurrently");
-        }
-
-        log.info("Changed arrival/departure time of train: {} to: {}", trainId, newTiming );
-
-        return updatedSchedule;
-    }*/
+        ScheduleDto updatedSchedule = scheduleServices.updateTiming(trainId, estimatedTime);
+        return ResponseEntity.ok(updatedSchedule);
+    }
 
 }

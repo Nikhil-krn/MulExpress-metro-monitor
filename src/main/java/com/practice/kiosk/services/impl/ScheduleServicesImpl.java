@@ -8,11 +8,11 @@ import com.practice.kiosk.mapper.ScheduleMapper;
 import com.practice.kiosk.repositories.ScheduleRepository;
 import com.practice.kiosk.repositories.TrainRepository;
 import com.practice.kiosk.services.ScheduleServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalTime;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.time.LocalDateTime;
 
 @Service
 public class ScheduleServicesImpl implements ScheduleServices {
@@ -21,6 +21,8 @@ public class ScheduleServicesImpl implements ScheduleServices {
     private final TrainRepository trainRepository;
     private final ScheduleMapper mapper;
 
+    private final static Logger log = LoggerFactory.getLogger(ScheduleServicesImpl.class);
+    
     public ScheduleServicesImpl(ScheduleRepository scheduleRepository, TrainRepository trainRepository, ScheduleMapper mapper) {
         this.scheduleRepository = scheduleRepository;
         this.trainRepository = trainRepository;
@@ -42,11 +44,16 @@ public class ScheduleServicesImpl implements ScheduleServices {
     }
 
     @Override
-    public ScheduleDto updateTiming(Integer trainId, LocalTime newTiming){
+    public ScheduleDto updateTiming(Integer trainId, LocalDateTime estimatedArrivalTime){
+        Schedule existingSchedule = scheduleRepository.fetchByTrainId(trainId);
 
-        final Map<Integer, Schedule> realTimeSchedule = new ConcurrentHashMap<>();
-        //realTimeSchedule.get(trainId);
+        if(existingSchedule == null){
+            throw new ResourceNotFoundException("404");
+        }
 
-        return null;
+        existingSchedule.setScheduledArrivalTime(estimatedArrivalTime);
+        log.info("Changed arrival time of train: {} to: {}", trainId, estimatedArrivalTime );
+        
+        return mapper.toDto(existingSchedule) ;
     }
 }
