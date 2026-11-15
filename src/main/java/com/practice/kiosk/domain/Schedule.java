@@ -1,11 +1,13 @@
 package com.practice.kiosk.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "mxpress_schedules")
+@JsonIgnoreProperties("hibernateLazyInitializer")
 public class Schedule {
 
 	@Id
