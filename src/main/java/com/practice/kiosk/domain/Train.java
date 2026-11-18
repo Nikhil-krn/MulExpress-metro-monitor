@@ -1,8 +1,7 @@
 package com.practice.kiosk.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -10,10 +9,15 @@ import java.util.Objects;
 @Table(name = "mxpress_trains")
 public class Train {
 
+    @Column(name = "train_name")
     private String trainName;
+
     @Id
+    @Column(name = "train_id")
     private Integer trainId;
+
     private String origin;
+
     private String destination;
     private String inventory;
     private LocalTime timing;

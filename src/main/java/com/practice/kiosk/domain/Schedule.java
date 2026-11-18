@@ -13,15 +13,27 @@ public class Schedule {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_id_seq")
 	private Integer scheduleId;
+
+	@Column(name = "board_point")
 	private String boardPoint;
+
+	@Column(name = "off_point")
 	private String offPoint;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "trainId")
+	@ManyToOne( fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "train_id")
 	private Train train;
+
+	@Column(name = "departure_time")
 	private LocalDateTime scheduledDepartureTime;
+
+	@Column(name = "arrival_time")
 	private LocalDateTime scheduledArrivalTime;
+
+	@Column(name = "fare_level")
 	private String fareLevel;
+
+	@Column(name = "is_happening")
 	private boolean happening = false;
 
 	public Schedule() {}
