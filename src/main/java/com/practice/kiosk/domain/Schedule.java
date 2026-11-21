@@ -11,7 +11,9 @@ import java.util.Objects;
 public class Schedule {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_id_seq")
+	@Column(name = "schedule_id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "schedule_seq")
+	@SequenceGenerator(name = "schedule_seq", sequenceName = "schedule_id_seq", allocationSize = 10)
 	private Integer scheduleId;
 
 	@Column(name = "board_point")

@@ -1,5 +1,6 @@
 package com.practice.kiosk.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.LocalTime;
@@ -7,6 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "mxpress_trains")
+@JsonIgnoreProperties("hibernateLazyInitializer")
 public class Train {
 
     @Column(name = "train_name")
@@ -19,7 +21,9 @@ public class Train {
     private String origin;
 
     private String destination;
+
     private String inventory;
+
     private LocalTime timing;
 
     public Train(String trainName, int trainId, String origin,

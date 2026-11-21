@@ -1,23 +1,14 @@
 package com.practice.kiosk.controllers;
 
-
-import com.practice.kiosk.domain.Schedule;
-import com.practice.kiosk.domain.Train;
 import com.practice.kiosk.dto.ScheduleDto;
-import com.practice.kiosk.repositories.ScheduleRepository;
+import com.practice.kiosk.dto.UpdateTimingReq;
 import com.practice.kiosk.services.ScheduleServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequestMapping(path = "/schedules")
@@ -46,11 +37,15 @@ public class ScheduleController {
         return ResponseEntity.ok(schedule);
     }
 
-    @PatchMapping(path = "/{trainId}")
-    public ResponseEntity<ScheduleDto> updateTiming( @PathVariable final Integer trainId,
-                                                     @RequestParam("newTiming") final LocalDateTime estimatedTime){
+    @GetMapping(path = "/train")
+    public ResponseEntity<Integer> fetchScheduleId(@RequestParam("trainId") final Integer trainId){
+        Integer id = scheduleServices.fetchScheduleId(trainId);
+        return ResponseEntity.ok(id);
+    }
 
-        ScheduleDto updatedSchedule = scheduleServices.updateTiming(trainId, estimatedTime);
+    @PatchMapping(path = "/{scheduleId}")
+    public ResponseEntity<ScheduleDto> updateTiming(@PathVariable final Integer scheduleId, @RequestBody final UpdateTimingReq request){
+        ScheduleDto updatedSchedule = scheduleServices.updateTiming(scheduleId, request);
         return ResponseEntity.ok(updatedSchedule);
     }
 
