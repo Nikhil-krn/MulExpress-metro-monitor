@@ -3,8 +3,10 @@ package com.practice.kiosk.services.impl;
 import com.practice.kiosk.domain.Schedule;
 import com.practice.kiosk.domain.Train;
 import com.practice.kiosk.dto.ScheduleDto;
+import com.practice.kiosk.dto.TempDto;
 import com.practice.kiosk.dto.UpdateTimingReq;
 import com.practice.kiosk.exceptions.ResourceNotFoundException;
+import com.practice.kiosk.mapper.IdMapper;
 import com.practice.kiosk.mapper.ScheduleMapper;
 import com.practice.kiosk.repositories.ScheduleRepository;
 import com.practice.kiosk.repositories.TrainRepository;
@@ -15,9 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 @Service
@@ -27,20 +27,29 @@ public class ScheduleServicesImpl implements ScheduleServices {
     private final ScheduleRepository scheduleRepository;
     private final TrainRepository trainRepository;
     private final ScheduleMapper mapper;
+    private final IdMapper idMapper;
 
     private final static Logger log = LoggerFactory.getLogger(ScheduleServicesImpl.class);
     
-    public ScheduleServicesImpl(ScheduleRepository scheduleRepository, TrainRepository trainRepository, ScheduleMapper mapper) {
+    public ScheduleServicesImpl(ScheduleRepository scheduleRepository, TrainRepository trainRepository, ScheduleMapper mapper, IdMapper idMapper) {
         this.scheduleRepository = scheduleRepository;
         this.trainRepository = trainRepository;
         this.mapper = mapper;
+        this.idMapper = idMapper;
     }
 
     @Override
     public ScheduleDto createSchedule(ScheduleDto scheduleDto) {
         Schedule newSchedule = mapper.toEntity(scheduleDto);
-        Schedule savedNewSchedule = scheduleRepository.save(newSchedule);
-        return mapper.toDto(savedNewSchedule);
+
+        LocalDateTime arr = newSchedule.getScheduledArrivalTime();
+        LocalDateTime dep = newSchedule.getScheduledDepartureTime();
+
+        if(arr.isBefore(dep)){
+            arr = arr.plusDays(1);
+            newSchedule.setScheduledArrivalTime(arr);
+        }
+        return mapper.toDto(scheduleRepository.save(newSchedule));
     }
 
     @Override
@@ -87,7 +96,9 @@ public class ScheduleServicesImpl implements ScheduleServices {
     }
 
     @Override
-    public int fetchScheduleId(Integer trainId){
-        return scheduleRepository.fetchScheduleId(trainId);
+    public TempDto fetchScheduleId(Integer trainId){
+
+        Integer scheduleId = scheduleRepository.fetchScheduleId(trainId);
+        return idMapper.toDto(scheduleId);
     }
 }

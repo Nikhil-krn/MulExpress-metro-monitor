@@ -1,10 +1,10 @@
 package com.practice.kiosk.repositories;
 
 import com.practice.kiosk.domain.Schedule;
+import com.practice.kiosk.dto.TempDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.Optional;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 

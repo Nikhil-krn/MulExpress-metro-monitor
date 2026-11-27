@@ -1,6 +1,7 @@
 package com.practice.kiosk.services;
 
 import com.practice.kiosk.dto.ScheduleDto;
+import com.practice.kiosk.dto.TempDto;
 import com.practice.kiosk.dto.UpdateTimingReq;
 
 import java.time.LocalDateTime;
@@ -11,5 +12,5 @@ public interface ScheduleServices {
     ScheduleDto retrieveSchedule(Integer scheduleId);
     ScheduleDto updateTiming(Integer scheduleId, UpdateTimingReq req);
     //ScheduleDto updateTiming(Integer scheduleId, );
-    int fetchScheduleId(Integer trainId);
+    TempDto fetchScheduleId(Integer trainId);
 }

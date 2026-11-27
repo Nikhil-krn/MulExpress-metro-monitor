@@ -1,6 +1,7 @@
 package com.practice.kiosk.controllers;
 
 import com.practice.kiosk.dto.ScheduleDto;
+import com.practice.kiosk.dto.TempDto;
 import com.practice.kiosk.dto.UpdateTimingReq;
 import com.practice.kiosk.services.ScheduleServices;
 import org.slf4j.Logger;
@@ -38,8 +39,8 @@ public class ScheduleController {
     }
 
     @GetMapping(path = "/train")
-    public ResponseEntity<Integer> fetchScheduleId(@RequestParam("trainId") final Integer trainId){
-        Integer id = scheduleServices.fetchScheduleId(trainId);
+    public ResponseEntity<TempDto> fetchScheduleId(@RequestParam("trainId") final Integer trainId){
+        TempDto id = scheduleServices.fetchScheduleId(trainId);
         return ResponseEntity.ok(id);
     }
 
